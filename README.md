@@ -3,6 +3,6 @@
 
 ## Integrantes
 
-Rodriguez Juan Cruz
+Rodriguez Juan Cruz  
 Ponti Mateo Daniel
 
