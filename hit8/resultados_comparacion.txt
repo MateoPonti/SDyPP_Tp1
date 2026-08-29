@@ -1,0 +1,20 @@
+Comparacion hit5 (JSON/TCP) vs hit8 (gRPC/Protocol Buffers)
+=================================================================
+Generado: 2026-08-29 17:49:46
+Iteraciones por benchmark: 200
+Mensaje logico usado en ambos casos: {"tipo": "saludo", "origen": "C", "texto": "Hola, soy C"}
+
+1) Tamano del mensaje en el cable
+-----------------------------------------------------------------
+  JSON + delimitador '\n' (hit5): 58 bytes
+  Protocol Buffers (hit8):         24 bytes
+  Reduccion con Protobuf:          58.6%
+
+2) Latencia por llamada (round-trip cliente-servidor, localhost)
+-----------------------------------------------------------------
+  JSON/TCP (hit5):
+    n=200  min=0.043ms  promedio=0.080ms  mediana=0.067ms  p95=0.120ms  max=0.385ms  desvio=0.036ms
+  gRPC/Protobuf (hit8):
+    n=200  min=0.316ms  promedio=0.397ms  mediana=0.357ms  p95=0.558ms  max=1.525ms  desvio=0.110ms
+  Diferencia de promedio (gRPC vs JSON): -394.7% (positivo = gRPC mas rapido)
+

@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package nodos;
+
+// Equivalente tipado del mensaje JSON del hit5:
+//   {"tipo": "saludo", "origen": "C", "texto": "Hola, soy C"}
+//
+// Se mantiene el campo "tipo" (aunque en gRPC es redundante -- el propio
+// nombre del RPC "Saludar" ya identifica el tipo de mensaje) para que la
+// comparación de tamaño en bytes contra el JSON de hit5 sea sobre el mismo
+// contenido de datos.
+message Saludo {
+  string tipo = 1;
+  string origen = 2;
+  string texto = 3;
+}
+
+service NodoSaludo {
+  // Cada nodo C expone este servicio para recibir el saludo de sus pares
+  // y responder con su propio saludo (equivalente bidireccional al
+  // intercambio request/response de hit5 sobre TCP).
+  rpc Saludar(Saludo) returns (Saludo);
+}
