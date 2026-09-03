@@ -52,12 +52,10 @@ Modifique el código de B para que si el proceso A cierra la conexión (por ejem
 Hit #4
 Refactoriza el código de los programas A y B en un único programa, que funcione simultáneamente como cliente y servidor. Esto significa que al iniciar el programa C, se le deben proporcionar por parámetros la dirección IP y el puerto para escuchar saludos, así como la dirección IP y el puerto de otro nodo C. De esta manera, al tener dos instancias de C en ejecución, cada una configurada con los parámetros del otro, ambas se saludan mutuamente a través de cada canal de comunicación.
 
-Hit #4 - Programa C Bidireccional
 
 Hit #5
 Modifiquen el programa C para que los mensajes se envíen en formato JSON [JSON], serializando y deserializando al enviar/recibir.
 
-Hit #5 - Serialización JSON
 
 Hit #6
 Cree un programa D, el cual actuará como un “Registro de contactos”. Para ello, en un array en RAM, inicialmente vacío, este nodo D llevará un registro de los programas C que estén en ejecución.
@@ -68,14 +66,12 @@ Modifique el programa C de manera tal que reciba por parámetros únicamente la 
 
 Es decir, el objetivo de este HIT es incorporar un nuevo tipo de nodo (D) que actúe como registro de contactos para que al iniciar cada nodo C no tenga que indicar las IPs de sus pares. Esto debe funcionar con múltiples instancias de C, no solo con 2.
 
-Hit #6 - Registro de Contactos
 
 Hit #7
 Modifique el programa C y D, de manera tal de implementar un “sistema de inscripciones”, esto es, se define una ventana de tiempo fija de 1 MIN, coordinada por D, y los nodos C deben registrarse para participar de esa ventana. Cuando un nodo C se registra a las 11:28:34 en D, el registro se hace efectivo para la próxima ventana de tiempo que corresponde a las 11:29. Cuando se alcanza las 11:29:00, el nodo D cierra las inscripciones y todo nodo C que se registre será anotado para la ventana de las 11:30. Los nodos C que consulten las inscripciones activas solo pueden ver las inscripciones de la ventana actual, es decir, los nodos C no saben a priori cuáles son sus pares para la próxima ventana de tiempo, solo saben los que están activos actualmente. Recuerde almacenar las inscripciones en un archivo de texto con formato JSON. Esto facilitará el seguimiento ordenado de las ejecuciones y asegurará la verificación de los resultados esperados.
 
 Para simplificar el problema, imagine que D lleva dos registros: un listado de los nodos C activos en la ventana actual, y un registro de nodos C registrados para la siguiente ventana. Cada 60 segundos el nodo D mueve los registros de las inscripciones futuras a la presente y comienza a inscribir para la siguiente ronda.
 
-Hit #7 - Sistema de Inscripciones
 
 Hit #8 — gRPC / Protobuf
 Refactoricen la comunicación del Hit #5 (mensajes JSON sobre TCP) reemplazándola por gRPC [GRPC] con Protocol Buffers [PBUF] — la materialización moderna del concepto clásico de RPC [BIR84, SRI95]. Para ello:
@@ -85,7 +81,6 @@ Generen los stubs de cliente y servidor con el compilador protoc para el lenguaj
 Reemplacen la serialización/deserialización JSON manual por las llamadas gRPC generadas.
 Comparen en el informe: tamaño de los mensajes en bytes (JSON vs Protobuf), latencia de las llamadas y experiencia de desarrollo (código manual vs código generado).
 
-Hit #8 - gRPC con Protocol Buffers
 
 
 
