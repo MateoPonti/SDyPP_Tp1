@@ -25,12 +25,9 @@ REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 
 def load_module(relative_path: str):
-    """Carga `relative_path` (ej: "hit6/NodoD.py") como módulo aislado."""
     file_path = REPO_ROOT / relative_path
 
-    # hit8/NodoC.py hace `import nodos_pb2` / `import nodos_pb2_grpc` de forma
-    # absoluta (no relativa), así que su carpeta debe estar en sys.path para
-    # que esos imports funcionen al cargar el módulo.
+
     parent_dir = str(file_path.parent)
     if parent_dir not in sys.path:
         sys.path.insert(0, parent_dir)

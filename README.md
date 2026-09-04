@@ -2,8 +2,8 @@
 
 ## Integrantes
 
-- Rodriguez Juan Cruz  
-- Ponti Mateo Daniel
+- Rodriguez Juan Cruz Legajo: 195341   
+- Ponti Mateo Daniel  Legajo: 175627
 
 ## Lenguaje de Programación
 _Python_
