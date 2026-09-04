@@ -12,7 +12,7 @@ pip install -r requirements-test.txt
 python -m pytest tests/ -v
 ```
 
-Deberían pasar 17 tests, sin necesidad de levantar procesos manualmente:
+Deberían pasar 33 tests, sin necesidad de levantar procesos manualmente:
 todos los tests usan `socket.socketpair()` (sockets TCP reales conectados
 en memoria, sin puertos ni red real) o servidores HTTP/gRPC levantados en
 un puerto aleatorio del propio proceso de test, así que corren solos y
@@ -20,6 +20,18 @@ en paralelo sin pisarse entre corridas.
 
 ## Qué cubre cada archivo
 
+- **`test_hit1_saludo_tcp.py`**: handshake elemental entre cliente A y servidor B
+  (envío de `"Hola B, soy A"`, recepción de `"Hola A, soy B"` y cierre tras
+  un único intercambio).
+- **`test_hit2_reconexion_cliente.py`**: envío del saludo continuo, detección de
+  cierre de conexión por parte de B (`ConnectionResetError`) y lógica de
+  reintentos ante fallos de conexión (`conectar`).
+- **`test_hit3_servidor_tolerancia.py`**: servidor tolerante a fallos que
+  procesa múltiples saludos en loop, tolera cierres limpios y desconexiones
+  abruptas sin interrumpir el proceso.
+- **`test_hit4_nodoc_bidireccional.py`**: nodo C unificado actuando en simultáneo
+  como servidor (`atender_conexion`) y cliente (`enviar_saludo`), intercambio
+  cruzado en paralelo entre dos nodos, y parseo de argumentos CLI.
 - **`test_hit5_json_framing.py`**: el framing manual por `\n`
   (`enviar_json` / `recibir_json`) que sostiene toda la comunicación desde
   el hit 5 en adelante. Incluye el caso de mensaje fragmentado en dos
@@ -39,22 +51,6 @@ en paralelo sin pisarse entre corridas.
   la lógica del servicer aislada, y un round-trip real de gRPC (servidor +
   cliente reales sobre un puerto aleatorio).
 - **`helpers.py`**: no es un archivo de test; es un loader que permite
-  importar, por ejemplo, `hit6/NodoD.py` y `hit7/NodoD.py` en el mismo
-  proceso de test sin que se pisen entre sí (ambos archivos se llaman
-  igual) y reiniciando el estado global (listas en RAM) en cada test.
+  importar los módulos en el mismo proceso de test sin que se pisen entre sí
+  y reiniciando el estado global en cada test.
 
-## Qué queda fuera de esta suite (y por qué)
-
-Los hits 1 a 4 (`ClienteTcp.py` / `ServidorTcp.py` / primera versión de
-`NodoC.py`) son scripts de nivel superior sin funciones reutilizables:
-ejecutan la lógica de sockets directamente al importarlos, con host/puerto
-hardcodeados, y se conectan/bloquean apenas se cargan. Automatizarlos tal
-cual están requeriría lanzarlos como subprocesos reales contra puertos
-fijos, lo cual es frágil en CI (colisiones de puerto, necesidad de matar
-procesos, timing). Su lógica de reconexión y tolerancia a fallos, sin
-embargo, es la misma que quedó refactorizada en funciones testeables a
-partir del hit 5 (`conectar`, `cliente`, `atender_conexion`), que sí están
-cubiertas acá. Si se quiere tests explícitos de hit 1-4 en el futuro, la
-forma más simple es agregarles un `if __name__ == "__main__":` (sin cambiar
-su comportamiento) para poder importar sus funciones sin que se ejecuten
-solas.
