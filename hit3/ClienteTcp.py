@@ -19,19 +19,22 @@ def conectar():
             time.sleep(RETRY_DELAY)
 
 
+def enviar_saludo(sock):
+    mensaje = "Hola B, soy A"
+    sock.sendall(mensaje.encode())
+    respuesta = sock.recv(1024)
+    if not respuesta:
+        raise ConnectionResetError("B cerró la conexión")
+    print(f"Respuesta de B: {respuesta.decode()}")
+    return respuesta.decode()
+
+
 def main():
     client_socket = conectar()
     try:
         while True:
             try:
-                mensaje = "Hola B, soy A"
-                client_socket.sendall(mensaje.encode())
-
-                respuesta = client_socket.recv(1024)
-                if not respuesta:
-                    raise ConnectionResetError("B cerró la conexión")
-
-                print(f"Respuesta de B: {respuesta.decode()}")
+                enviar_saludo(client_socket)
             except (ConnectionRefusedError, ConnectionResetError, BrokenPipeError, ConnectionAbortedError, OSError) as e:
                 print(f"Conexión con B perdida ({e}). Reconectando...")
                 client_socket.close()

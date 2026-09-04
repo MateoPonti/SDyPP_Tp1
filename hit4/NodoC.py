@@ -62,19 +62,24 @@ def conectar(peer_host, peer_puerto):
             time.sleep(RETRY_DELAY)
 
 
+def enviar_saludo(sock, peer_host="peer", peer_puerto=0):
+    mensaje = "Hola, soy C"
+    sock.sendall(mensaje.encode())
+
+    respuesta = sock.recv(BUFFER_SIZE)
+    if not respuesta:
+        raise ConnectionResetError("El otro nodo cerró la conexión")
+
+    print(f"[Cliente] Respuesta de {peer_host}:{peer_puerto}: {respuesta.decode()}")
+    return respuesta.decode()
+
+
 def cliente(peer_host, peer_puerto):
     client_socket = conectar(peer_host, peer_puerto)
     try:
         while True:
             try:
-                mensaje = "Hola, soy C"
-                client_socket.sendall(mensaje.encode())
-
-                respuesta = client_socket.recv(BUFFER_SIZE)
-                if not respuesta:
-                    raise ConnectionResetError("El otro nodo cerró la conexión")
-
-                print(f"[Cliente] Respuesta de {peer_host}:{peer_puerto}: {respuesta.decode()}")
+                enviar_saludo(client_socket, peer_host, peer_puerto)
             except (ConnectionRefusedError, ConnectionResetError, BrokenPipeError, ConnectionAbortedError, OSError) as e:
                 print(f"[Cliente] Conexión perdida ({e}). Reconectando...")
                 client_socket.close()
@@ -84,6 +89,7 @@ def cliente(peer_host, peer_puerto):
             time.sleep(INTERVALO)
     finally:
         client_socket.close()
+
 
 
 def main():

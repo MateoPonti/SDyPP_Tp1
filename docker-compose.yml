@@ -1,0 +1,18 @@
+services:
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION:-3.11-slim}
+        APP_USER: ${APP_USER:-appuser}
+        APP_GROUP: ${APP_GROUP:-appgroup}
+        APP_UID: ${APP_UID:-1000}
+        APP_GID: ${APP_GID:-1000}
+        APP_DIR: ${APP_DIR:-/app}
+        VENV_PATH: ${VENV_PATH:-/home/appuser/venv}
+    image: sdypp-tests:latest
+    env_file:
+      - .env
+    volumes:
+      - .:${APP_DIR:-/app}

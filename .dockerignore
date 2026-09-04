@@ -1,0 +1,20 @@
+.git
+.gitignore
+.claude
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.venv
+venv
+env
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+*.pem
+*.egg-info
+.coverage
+htmlcov
+

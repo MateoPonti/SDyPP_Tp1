@@ -1,0 +1,7 @@
+# Los hits 1 a 7 usan únicamente la librería estándar de Python (socket,
+# threading, json, http.server, sched, argparse). La única dependencia
+# externa del proyecto es gRPC + Protocol Buffers, usada en hit8.
+grpcio>=1.83
+grpcio-tools>=1.83
+protobuf==7.35.1
+pytest>=8.0
